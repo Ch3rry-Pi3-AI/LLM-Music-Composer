@@ -1,0 +1,106 @@
+# =====================================================================
+# GitLab CI/CD Pipeline for LLMOps Music Composer
+#
+# This configuration:
+# 1. Checks out the repository (placeholder stage)
+# 2. Builds a Docker image for the Streamlit app using Docker-in-Docker
+# 3. Pushes the image to Google Artifact Registry
+# 4. Deploys the updated image to a GKE Kubernetes cluster
+#
+# Requires environment variables in GitLab:
+#   - GCP_SA_KEY (Base64-encoded service account key JSON)
+#   - PROJECT_ID
+#   - REGION
+#   - REPO
+#   - CLUSTER
+# =====================================================================
+
+# Base image containing gcloud CLI and Kubernetes tools
+image: google/cloud-sdk:latest
+
+
+# -----------------------------------------------------
+# Pipeline Stages
+# -----------------------------------------------------
+stages:
+  - checkout   # Placeholder stage (verifies pipeline start)
+  - build      # Build & push Docker image
+  - deploy     # Deploy to GKE cluster
+
+
+# -----------------------------------------------------
+# Global Variables Used in Stages
+# -----------------------------------------------------
+variables:
+  PROJECT_ID: "sacred-garden-474511-b9"         # GCP project ID
+  REGION: "us-central1"                         # GCP region for GKE + Artifact Registry
+  REPO: "llmops-repo"                           # Artifact Registry repo name
+  REGISTRY: "us-central1-docker.pkg.dev"        # Artifact Registry base URL
+  CLUSTER: "llmops"                             # GKE cluster name
+
+
+# =====================================================================
+# Stage 1: CHECKOUT
+# =====================================================================
+checkout_code:
+  stage: checkout
+  script:
+    - echo "Code Checked out.."                 # Placeholder (GitLab auto-checks out the code)
+
+
+# =====================================================================
+# Stage 2: BUILD (Build & Push Docker Image)
+# =====================================================================
+build_docker_image:
+  stage: build
+
+  # Docker-in-Docker service required to build images inside GitLab runner
+  services:
+    - name: docker:dind
+      command: ["--tls=false"]                  # Disable TLS so Docker CLI can connect easily
+
+  # Required settings for Docker-in-Docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375              # Docker daemon address
+    DOCKER_TLS_CERTDIR: ""                      # Disable TLS directory to avoid conflicts
+
+  before_script:
+    # Decode service account key (GCP_SA_KEY is base64-encoded in GitLab)
+    - echo "$GCP_SA_KEY" | base64 -d > gcp-key.json
+
+    # Authenticate using service account
+    - gcloud auth activate-service-account --key-file=gcp-key.json
+
+    # Configure Docker to authenticate with Artifact Registry
+    - gcloud auth configure-docker $REGISTRY
+
+  script:
+    # Build Docker image for the Streamlit app
+    - docker build -t $REGISTRY/$PROJECT_ID/$REPO/llmops-app:latest .
+
+    # Push the image to Artifact Registry
+    - docker push $REGISTRY/$PROJECT_ID/$REPO/llmops-app:latest
+
+
+# =====================================================================
+# Stage 3: DEPLOY (Apply Kubernetes Deployment to GKE)
+# =====================================================================
+deploy_to_gke:
+  stage: deploy
+
+  before_script:
+    # Decode service account key for gcloud authentication
+    - echo "$GCP_SA_KEY" | base64 -d > gcp-key.json
+
+    # Authenticate with GCP
+    - gcloud auth activate-service-account --key-file=gcp-key.json
+
+    # Configure Docker credentials (required if pulling private images)
+    - gcloud auth configure-docker $REGISTRY
+
+  script:
+    # Connect kubectl to the target GKE cluster
+    - gcloud container clusters get-credentials $CLUSTER --region $REGION --project $PROJECT_ID
+
+    # Apply the Kubernetes deployment (Deployment + Service)
+    - kubectl apply -f kubernetes-deployment.yaml
