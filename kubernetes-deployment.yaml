@@ -1,0 +1,52 @@
+# ============================================================
+# Kubernetes Deployment for LLMOps Music Composer (Streamlit App)
+# ============================================================
+
+# ------------------------------------------------------------
+# Deployment
+# ------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llmops-app            # Name of the Deployment resource
+spec:
+  replicas: 1                 # Run a single instance of the app
+  selector:
+    matchLabels:
+      app: llmops-app         # Match Pods carrying this label
+  template:
+    metadata:
+      labels:
+        app: llmops-app       # Label applied to the Pod created by this Deployment
+    spec:
+      containers:
+      - name: llmops-app      # Container name inside the Pod
+        image: us-central1-docker.pkg.dev/gen-lang-client-0729539659/llmops-repo/llmops-app:latest
+                              # Container image from Artifact Registry
+        ports:
+        - containerPort: 8501  # Streamlit app listens on port 8501
+        env:
+        - name: GROQ_API_KEY   # Environment variable for Groq LLM access
+          valueFrom:
+            secretKeyRef:      # Pull secret from Kubernetes Secret
+              name: llmops-secrets
+              key: GROQ_API_KEY
+
+---
+
+# ============================================================
+# Kubernetes Service (LoadBalancer)
+# ============================================================
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: llmops-service         # Name of the Service
+spec:
+  selector:
+    app: llmops-app            # Expose Pods with this label
+  ports:
+    - protocol: TCP
+      port: 80                 # External port exposed outside the cluster
+      targetPort: 8501         # Internal port on the container (Streamlit)
+  type: LoadBalancer           # Provides public external IP (GKE compatible)
