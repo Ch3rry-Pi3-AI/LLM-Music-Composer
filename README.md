@@ -1,18 +1,17 @@
-# 🚀 **GitLab Project Setup — LLMOps Music Composer**
+# ☁️ **GCP Environment Setup — LLMOps Music Composer**
 
-This branch introduces the version-control setup for GitLab.
-The purpose here is to prepare the repository for future **GitLab CI/CD pipelines**, which will handle automated building, testing, and deployment of the music composer application.
+This branch introduces the full **Google Cloud Platform setup** required for deploying and operating the LLMOps Music Composer.
+It covers API activation, GKE cluster creation, Artifact Registry configuration, and preparing a Service Account that will later enable CI/CD pipelines to deploy containers automatically.
 
-A new GitLab project is created, and the local repository is connected to it using a new remote.
-This ensures your project can be pushed to GitLab without interfering with your existing GitHub or other remotes.
+This stage establishes the cloud infrastructure backbone for upcoming GitLab CI/CD and Kubernetes deployment branches.
 
 <p align="center">
-  <img src="img/gitlab/new_project.png" alt="GitLab New Project" width="100%">
+  <img src="img/gcp_setup/networking.png" alt="GCP Networking Configuration" width="100%">
 </p>
 
 ## 🗂️ **Updated Project Structure**
 
-Only the **new integration step** is annotated here — no new code files were added, but the repository now includes a GitLab remote.
+Only the **new setup stage** is represented; no new code files were added for this branch.
 
 ```text
 LLMOPS-MUSIC-COMPOSER/
@@ -25,50 +24,101 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
+<<<<<<< README.md
+├── IMG/                         # Contains GCP setup screenshots (networking, etc.)
+=======
 ├── img/
+>>>>>>> README.md
 ├── app/
 │   ├── __init__.py
 │   ├── utils.py
 │   └── main.py
-└── application.py
+├── application.py
+├── Dockerfile
+└── kubernetes-deployment.yaml
 ```
 
-## 🧩 **What This Branch Introduces**
+## 🌐 **What This Branch Introduces**
 
-### 🛠️ GitLab Project Creation
+### ✅ **Enable Required GCP APIs**
 
-1. Create a GitLab account at
-   **[https://gitlab.com](https://gitlab.com)**
-2. Create a **new blank public project**.
-3. For *Project deployment target*, select:
-   **Kubernetes (GKE, EKS, OpenShift, etc.)**
+In your GCP Console:
 
-This prepares the repository for upcoming GitLab CI/CD workflows and Kubernetes deployments.
+Navigation:
+**APIs & Services → Library**
 
----
+Enable these essential services:
 
-## 🌐 **Code Versioning with GitLab**
+* Kubernetes Engine API
+* Container Registry API
+* Compute Engine API
+* Cloud Build API
+* Cloud Storage API
+* IAM API
 
-If this project is *not* currently linked to any remote:
+These APIs allow Kubernetes clusters, container storage, compute resources, and identity/permission systems to function correctly.
 
-```bash
-git init
-git branch -M main
-git remote add origin https://gitlab.com/your-username/your-repo.git
-git add .
-git commit -m "Initial commit"
-git push origin main
+
+
+## ☸️ **Create GKE Cluster and Artifact Registry**
+
+### **1. Create a GKE Cluster**
+
+1. In the GCP Console, search for **GKE** → open *Kubernetes Engine*.
+2. Create a new cluster (Autopilot or Standard — your choice).
+3. Under **Networking**, apply the necessary configuration.
+
+<p align="center">
+  <img src="IMG/gcp_setup/networking.png" alt="GKE Networking Setup" width="100%">
+</p>
+
+### **2. Create an Artifact Registry Repository**
+
+1. Search for **Artifact Registry**.
+2. Create a new repository.
+3. Choose **Format: Docker**.
+4. Select the **same region** as your cluster.
+
+This store will hold all container images built from your Dockerfile.
+
+
+
+## 🔐 **Create a Service Account and Configure Access**
+
+### **1. Create a Service Account**
+
+In the GCP Console → **IAM & Admin → Service Accounts**.
+Create a new one for CI/CD usage.
+
+### **2. Assign These Roles:**
+
+* Storage Object Admin
+* Storage Object Viewer
+* Owner
+* Artifact Registry Admin
+* Artifact Registry Writer
+
+These permissions allow the CI/CD pipeline to push container images and deploy to Kubernetes.
+
+### **3. Download the Key File (.json)**
+
+1. Click **Actions** on your service account
+2. **Manage keys**
+3. **Add key → Create new key**
+4. Download the JSON file (e.g., `gcp-key.json`)
+
+### **4. Place the Key in Your Project Root**
+
+Move it into your project:
+
+```
+LLMOPS-MUSIC-COMPOSER/gcp-key.json
 ```
 
-## 🔄 **If You Are Already Pushing to GitHub**
+### **5. Add to .gitignore**
 
-Use a **second remote** so GitHub remains untouched:
+To prevent credential leaks:
 
-```bash
-git remote add gitlab https://gitlab.com/your-username/your-repo.git
-git add .
-git commit -m "Initial commit"
-git push gitlab main
 ```
-
-This preserves your GitHub workflow while enabling GitLab CI/CD pipelines to operate independently.
+gcp-key.json
+```
