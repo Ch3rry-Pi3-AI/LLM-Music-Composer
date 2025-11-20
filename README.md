@@ -1,16 +1,18 @@
-# 🚀 **Docker & Kubernetes Deployment — LLMOps Music Composer**
+# 🚀 **GitLab Project Setup — LLMOps Music Composer**
 
-This branch introduces the full **containerisation and orchestration layer** for the LLMOps Music Composer.
-It adds two production-ready components to the project:
+This branch introduces the version-control setup for GitLab.
+The purpose here is to prepare the repository for future **GitLab CI/CD pipelines**, which will handle automated building, testing, and deployment of the music composer application.
 
-* A **Dockerfile** for building and packaging the Streamlit app into a lightweight Python 3.12 container
-* A **kubernetes-deployment.yaml** manifest defining both the Deployment and the LoadBalancer Service for running the app inside a Kubernetes environment (e.g., GKE Autopilot)
+A new GitLab project is created, and the local repository is connected to it using a new remote.
+This ensures your project can be pushed to GitLab without interfering with your existing GitHub or other remotes.
 
-Together, these updates enable the AI Music Composer to be built, shipped, and deployed consistently in any cloud environment.
+<p align="center">
+  <img src="IMG/gitlab/new_project.png" alt="GitLab New Project" width="100%">
+</p>
 
 ## 🗂️ **Updated Project Structure**
 
-Only the **new files** are annotated.
+Only the **new integration step** is annotated here — no new code files were added, but the repository now includes a GitLab remote.
 
 ```text
 LLMOPS-MUSIC-COMPOSER/
@@ -24,53 +26,53 @@ LLMOPS-MUSIC-COMPOSER/
 ├── setup.py
 ├── llmops_music_composer.egg-info/
 ├── IMG/
-│   └── Streamlit/
-│       └── streamlit_app.gif
+│   ├── Streamlit/
+│   │   └── streamlit_app.gif
+│   └── gitlab/
+│       └── new_project.png        # NEW: Screenshot of GitLab project creation
 ├── app/
 │   ├── __init__.py
 │   ├── utils.py
 │   └── main.py
-├── application.py
-├── Dockerfile                     # NEW: Container build for the Streamlit app
-└── kubernetes-deployment.yaml     # NEW: Deployment + Service for Kubernetes (GKE-ready)
+└── application.py
 ```
 
-## 🛳️ **What This Branch Introduces**
+## 🧩 **What This Branch Introduces**
 
-### 🐳 **Docker Containerisation**
+### 🛠️ GitLab Project Creation
 
-The included `Dockerfile` provides:
+1. Create a GitLab account at
+   **[https://gitlab.com](https://gitlab.com)**
+2. Create a **new blank public project**.
+3. For *Project deployment target*, select:
+   **Kubernetes (GKE, EKS, OpenShift, etc.)**
 
-* A Python 3.12-slim base image (lightweight and efficient)
-* Editable installation via `-e .`
-* Environment-safe import paths (`PYTHONPATH=.`)
-* Exposure of port **8501** for Streamlit
-* A production-grade CMD to launch the Streamlit server in headless mode:
+This prepares the repository for upcoming GitLab CI/CD workflows and Kubernetes deployments.
 
-  * `--server.address=0.0.0.0`
-  * `--server.port=8501`
+---
 
-This container is ready for local runs, CI/CD builds, and cloud deployment.
+## 🌐 **Code Versioning with GitLab**
 
-### ☸️ **Kubernetes Deployment (GKE Compatible)**
+If this project is *not* currently linked to any remote:
 
-The file `kubernetes-deployment.yaml` introduces:
+```bash
+git init
+git branch -M main
+git remote add origin https://gitlab.com/your-username/your-repo.git
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
 
-* A **Deployment** running the Streamlit app as a single Pod
-* A container image pulled from Artifact Registry
-* Automatic injection of the `GROQ_API_KEY` via Kubernetes Secrets
-* Exposure of containerPort **8501**
-* A **LoadBalancer Service** providing external access via port **80**
+## 🔄 **If You Are Already Pushing to GitHub**
 
-This is a complete, minimal, cloud-ready deployment model.
+Use a **second remote** so GitHub remains untouched:
 
-## 🌐 **Why This Branch Matters**
+```bash
+git remote add gitlab https://gitlab.com/your-username/your-repo.git
+git add .
+git commit -m "Initial commit"
+git push gitlab main
+```
 
-With this branch, the LLMOps Music Composer is no longer just a local tool — it becomes a **deployable service**:
-
-* It can run locally in Docker
-* It can be deployed to Kubernetes clusters
-* It can scale later to more replicas
-* It integrates seamlessly into CI/CD workflows (Jenkins, CircleCI, ArgoCD, etc.)
-
-This establishes the operational backbone of the project, enabling reliable and reproducible deployments across environments.
+This preserves your GitHub workflow while enabling GitLab CI/CD pipelines to operate independently.
