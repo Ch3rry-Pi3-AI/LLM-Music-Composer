@@ -1,187 +1,72 @@
-# 🛠️ **GitLab CI/CD Setup — LLMOps Music Composer**
+# 🎼 **LLMOps Music Composer — Project Overview**
 
-This branch introduces the **full continuous integration and deployment pipeline** for the LLMOps Music Composer using **GitLab CI/CD**.
-The pipeline handles:
+This repository presents a complete **LLMOps workflow** for an AI-powered **Music Composer**, combining Groq-hosted LLMs, Streamlit UI, WAV synthesis, Kubernetes deployment, and a full GitLab CI/CD pipeline.
 
-* Secure authentication with GCP
-* Docker image building
-* Artifact Registry uploads
-* Automatic deployment to GKE
-* Secret management for LLM access
-
-This is the branch that turns the Music Composer into a **fully automated, cloud-deployed system**.
+The system transforms natural-language prompts into melody, harmony, rhythm, and style-adapted compositions. These are synthesised into audio and deployed automatically to GKE via GitLab.
 
 <p align="center">
-  <img src="img/cicd/add_variable.png" alt="GitLab CI/CD Variable" width="100%">
+  <img src="img/streamlit/streamlit_app.gif" alt="AI Music Composer Demo" width="100%">
 </p>
 
-## 🗂️ **Updated Project Structure**
+## 🧩 **Grouped Stages**
 
-Only the **new CI/CD file** is annotated here.
+|     #     | Stage                                   | Description                                                                                                                                                                                            |
+| :-------: | :-------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   **00**  | **Project Setup**                       | Created the base folder layout, virtual environment, editable install, `.env` handling, and foundational configuration for clean modular development.                                                  |
+| **01–02** | **Core Logic (Utilities + LLM Module)** | Implemented audio utilities (`utils.py`) for note→frequency conversion and WAV synthesis, plus the `MusicLLM` module powering melody, harmony, rhythm, and style generation using Groq’s LLaMA models. |
+|   **03**  | **Streamlit Application**               | Built a user-friendly Streamlit UI (`application.py`) to accept prompts, choose styles, generate music, and play back synthesised audio. Included improved UX, layout, spinners, and session logic.    |
+|   **04**  | **Docker & Kubernetes Deployment**      | Added the project `Dockerfile` and `kubernetes-deployment.yaml` to deploy the Streamlit app onto GKE with secure secret injection via Kubernetes secrets.                                              |
+|   **05**  | **GitLab Project Setup**                | Created a GitLab remote for CI/CD, added GitLab authentication, and configured project access for pipeline usage.                                                                                      |
+|   **06**  | **Google Cloud Platform Setup**         | Enabled required GCP APIs, created the GKE cluster, created Artifact Registry, set up service accounts, and configured secure deployment access.                                                       |
+|   **07**  | **GitLab CI/CD Pipeline**               | Implemented `.gitlab-ci.yml` for automated Docker builds, Artifact Registry pushes, and GKE deployments. Added GCP credentials, Kubernetes secrets, and full GitLab pipeline flow.                     |
+
+## 🗂️ **Project Structure**
 
 ```text
 LLMOPS-MUSIC-COMPOSER/
-├── .venv/
-├── .env
-├── .gitignore
-├── .python-version
-├── pyproject.toml
-├── README.md
-├── requirements.txt
-├── setup.py
-├── llmops_music_composer.egg-info/
-├── img/                      # GitLab CI/CD screenshots added here
+├── app/                                    # 🎵 Core application logic
+│   ├── __pycache__/                        # ⚡ Python cache
+│   ├── __init__.py                         # Marks the app package
+│   ├── main.py                             # 🤖 LLM module for melody/harmony/rhythm/style generation
+│   ├── README.md                           # 📖 Documentation for the app folder
+│   └── utils.py                            # 🔊 Note→frequency + WAV synthesis utilities
 │
-├── app/
-│   ├── __init__.py
-│   ├── utils.py
-│   └── main.py
+├── img/                                    # 📸 Documentation screenshots & GIFs
+│   └── streamlit/
+│       └── streamlit_app.gif               # 🎬 Demo of the Streamlit music generator
 │
-├── application.py
-├── Dockerfile
-├── kubernetes-deployment.yaml
-└── .gitlab-ci.yml            # NEW: Full GitLab CI/CD pipeline config
+├── llmops_music_composer.egg-info/         # 📦 Packaging metadata (auto-generated)
+├── .venv/                                  # 🧪 Virtual environment (ignored in repo)
+├── .env                                    # 🔐 API keys (never committed)
+├── .gitignore                              # 🚫 Ignore rules
+├── .gitlab-ci.yml                          # ⚙️ GitLab CI/CD pipeline for build + deploy
+├── .python-version                         # 🐍 Python version pin
+├── application.py                          # 🎛️ Streamlit application UI
+├── Dockerfile                              # 🐳 Container build definition
+├── gcp-key.json                            # 🔑 GCP service account key (ignored from repo)
+├── kubernetes-deployment.yaml              # ☸️ GKE deployment + service manifest
+├── pyproject.toml                          # 🧩 Project metadata + dependencies
+├── README.md                               # 📘 Main project documentation (you are here)
+├── requirements.txt                        # 📦 Python dependencies list
+├── setup.py                                # 🔧 Editable install configuration
+└── uv.lock                                 # 🔒 Locked dependency versions
 ```
 
+## 🚀 **Summary**
 
+The **LLMOps Music Composer** project demonstrates how to take a creative, LLM-powered idea from prototype to a fully automated, cloud-deployed system.
 
-# 🔐 **1. Convert Service Account Key to Base64**
+The full workflow includes:
 
-To securely store the GCP service account key in GitLab, convert it to base64:
+* A **Groq-based LLM engine** generating melodies, harmonies, rhythms, and style-adapted musical structures
+* A **Streamlit UI** for composing and playing music interactively
+* A solid MLOps backbone with:
 
-```bash
-cat gcp-key.json | base64 -w 0
-```
+  * **Docker containerisation**
+  * **Kubernetes deployment (GKE)**
+  * **Artifact Registry**
+  * **Google Cloud service accounts & secrets**
+  * **GitLab CI/CD pipeline** for automated build & deploy
+* Proper project structuring, modularisation, and dev-tooling
 
-Copy the output — this is what you’ll paste into GitLab CI/CD variables as `GCP_SA_KEY`.
-
-
-
-# 🔐 **2. Add `GCP_SA_KEY` to GitLab CI/CD Variables**
-
-1. Go to your GitLab project
-2. **Settings → CI/CD → Variables**
-3. Click **Add Variable**
-
-<p align="center">
-  <img src="img/cicd/add_variable.png" width="100%">
-</p>
-
-Add:
-
-* **Key:** `GCP_SA_KEY`
-* **Value:** *(paste the base64 from the previous step)*
-
-This allows GitLab runners to authenticate with Google Cloud automatically.
-
-
-
-# ☸️ **3. Create Secrets in GKE (GROQ API Key)**
-
-### **Access your GKE Cluster**
-
-In the GCP Console, open **GKE → kubectl terminal** or configure your local CLI:
-
-```bash
-gcloud container clusters get-credentials llmops \
-  --region us-central1 \
-  --project sacred-garden-474511-b9
-```
-
-<p align="center">
-  <img src="img/cicd/connect.png" width="100%">
-</p>
-
-
-
-### **Create Kubernetes Secret**
-
-```bash
-kubectl create secret generic llmops-secrets \
-  --from-literal=GROQ_API_KEY="your_actual_groq_api_key"
-```
-
-This secret is used by the deployment yaml:
-
-```yaml
-env:
-- name: GROQ_API_KEY
-  valueFrom:
-    secretKeyRef:
-      name: llmops-secrets
-      key: GROQ_API_KEY
-```
-
-
-
-# ⚙️ **4. Configure GitLab CI/CD Pipeline**
-
-Add the provided `.gitlab-ci.yml` file to the **root directory** of your project.
-
-This pipeline:
-
-* Installs Docker CLI
-* Authenticates to GCP using the base64 key
-* Builds your Docker container
-* Pushes to Artifact Registry
-* Deploys to GKE
-
-Once this file exists, every push to GitLab automatically triggers CI/CD.
-
-
-
-# 🚀 **5. Triggering and Monitoring Pipelines**
-
-GitLab will automatically run the pipeline when you:
-
-* Push a commit
-* Merge into `main`
-* Manually trigger from Pipelines menu
-
-Open:
-
-**Left Sidebar → Build → Pipelines**
-
-<p align="center">
-  <img src="img/cicd/pipeline_success1.png" width="100%">
-</p>
-
-Click into a run to inspect logs:
-
-<p align="center">
-  <img src="img/cicd/pipeline_success2.png" width="100%">
-</p>
-
-
-
-# 🌐 **6. View Your Application on GKE**
-
-Once the deploy stage completes:
-
-1. Go to **GKE → Workloads**
-2. Find `llmops-app`
-
-<p align="center">
-  <img src="img/cicd/workloads.png" width="100%">
-</p>
-
-Scroll to the **Exposing services** section at the bottom:
-
-<p align="center">
-  <img src="img/cicd/endpoint.png" width="100%">
-</p>
-
-Use the external endpoint shown there to open the **live LLMOps Music Composer** in your browser.
-
-
-# ✅ **Summary**
-
-This branch enables:
-
-✔ Automatic Docker builds
-✔ Automatic GKE deployments
-✔ Secure storage of API keys
-✔ GKE secrets for LLM access
-✔ Fully automated, cloud-native CI/CD workflow
-
-This is the branch that completes the operational backbone of the project — every code push becomes a live deployment.
+Together, these stages form a complete **LLMOps pipeline**, turning text prompts into fully generated music — deployed, scaled, and automated in the cloud.
