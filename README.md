@@ -171,8 +171,7 @@ Scroll to the **Exposing services** section at the bottom:
   <img src="img/cicd/endpoint.png" width="100%">
 </p>
 
-Use the external endpoint shown there to open the **live deployed LLMOps Music Composer** in your browser.
-
+Use the external endpoint shown there to open the **live LLMOps Music Composer** in your browser.
 
 
 # ✅ **Summary**
