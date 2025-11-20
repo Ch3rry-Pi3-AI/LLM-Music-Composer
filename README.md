@@ -6,7 +6,7 @@ It covers API activation, GKE cluster creation, Artifact Registry configuration,
 This stage establishes the cloud infrastructure backbone for upcoming GitLab CI/CD and Kubernetes deployment branches.
 
 <p align="center">
-  <img src="IMG/gcp_setup/networking.png" alt="GCP Networking Configuration" width="100%">
+  <img src="img/gcp_setup/networking.png" alt="GCP Networking Configuration" width="100%">
 </p>
 
 ## 🗂️ **Updated Project Structure**
