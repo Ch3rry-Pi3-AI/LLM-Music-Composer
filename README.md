@@ -1,9 +1,13 @@
-# 🎼 **Music LLM Module — LLMOps Music Composer**
+# 🎼 **Streamlit Application Development — LLMOps Music Composer**
 
-This branch introduces the project’s first **LLM-powered musical-generation component**.
-The new module provides melody creation, harmony building, rhythm suggestion, and musical-style adaptation using a Groq-hosted LLaMA model.
+This branch introduces the first **interactive user interface** for the LLMOps Music Composer.
+It adds the `application.py` Streamlit app, allowing users to describe the music they want, choose a style, and generate playable AI-composed audio directly from the browser.
 
-This marks the beginning of the intelligent composition pipeline and will serve as the backbone for future melody construction, arrangement logic, and style-based rendering.
+The UI integrates melodic, harmonic, rhythmic, and stylistic LLM reasoning with on-the-fly audio synthesis, forming the project’s first complete end-to-end experience.
+
+<p align="center">
+  <img src="IMG/Streamlit/streamlit_app.gif" alt="AI Music Composer Demo" width="100%">
+</p>
 
 ## 🗂️ **Updated Project Structure**
 
@@ -20,29 +24,47 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
+├── IMG/
+│   └── Streamlit/
+│       └── streamlit_app.gif
 └── app/
     ├── __init__.py
     ├── utils.py
-    └── main.py        # NEW: LLM-driven melody, harmony, rhythm, and style generation
+    ├── main.py
+application.py         # NEW: Streamlit interface for LLM-powered AI music generation
 ```
 
 ## 🎧 **What This Branch Introduces**
 
-### 🎵 Melody Generation
+### 🎛️ Interactive Web Application
 
-Creates a sequence of musical notes based on natural-language prompts.
+A fully functional Streamlit UI that enables users to:
 
-### 🎹 Harmony Generation
+* Describe the type of music they want
+* Select a musical style (Happy, Sad, Jazz, Romantic, Extreme)
+* Generate a complete musical structure: melody, harmony, rhythm, and styled adaptation
+* Listen to the composed audio immediately
 
-Produces chord progressions aligned with an existing melody.
+### 🎵 Melody, Harmony, and Rhythm Integration
 
-### 🥁 Rhythm Generation
+The app connects to the `MusicLLM` class to produce:
 
-Suggests beat durations corresponding to melodic structure.
+* Note sequences
+* Chord progressions
+* Rhythm durations
+* Styled composition summaries
 
-### 🎨 Style Adaptation
+### 🔊 On-The-Fly Audio Synthesis
 
-Transforms melody, harmony, and rhythm into a specified musical style
-(e.g., jazz, baroque, lofi, cinematic).
+Using the utilities in `app/utils.py`, the app converts the generated notes into frequencies and synthesises a WAV file that plays directly in the browser.
 
-These LLM-powered features form the intelligence layer of the LLMOps Music Composer and will directly support future branches involving arrangement, structure, refinement, and full-piece composition.
+### 🎨 Improved UX & Layout
+
+The interface includes:
+
+* Sidebar instructions
+* A clear two-column layout for input and style selection
+* Status messages and spinners during composition
+* Expandable composition summaries
+
+This branch marks the first point where the project becomes **fully interactive**, giving users a real musical output from natural-language intent.
