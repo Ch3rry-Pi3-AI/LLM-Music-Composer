@@ -25,11 +25,7 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
-├── IMG/
-│   ├── Streamlit/
-│   │   └── streamlit_app.gif
-│   └── gitlab/
-│       └── new_project.png        # NEW: Screenshot of GitLab project creation
+├── img/
 ├── app/
 │   ├── __init__.py
 │   ├── utils.py
