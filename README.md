@@ -65,8 +65,9 @@ These APIs allow Kubernetes clusters, container storage, compute resources, and 
 3. Under **Networking**, apply the necessary configuration.
 
 <p align="center">
-  <img src=img/gcp_setup/networking.png" alt="GKE Networking Setup" width="100%">
+  <img src="img/gcp_setup/networking.png" alt="GKE Networking Setup" width="100%">
 </p>
+
 
 ### **2. Create an Artifact Registry Repository**
 
