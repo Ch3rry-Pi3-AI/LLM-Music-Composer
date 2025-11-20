@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: llmops-app      # Container name inside the Pod
-        image: us-central1-docker.pkg.dev/gen-lang-client-0729539659/llmops-repo/llmops-app:latest
+        image: us-central1-docker.pkg.dev/sacred-garden-474511-b9/llmops-repo/llmops-app:latest
                               # Container image from Artifact Registry
         ports:
         - containerPort: 8501  # Streamlit app listens on port 8501
