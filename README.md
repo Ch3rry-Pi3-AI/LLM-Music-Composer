@@ -7,7 +7,7 @@ A new GitLab project is created, and the local repository is connected to it usi
 This ensures your project can be pushed to GitLab without interfering with your existing GitHub or other remotes.
 
 <p align="center">
-  <img src="IMG/gitlab/new_project.png" alt="GitLab New Project" width="100%">
+  <img src="img/gitlab/new_project.png" alt="GitLab New Project" width="100%">
 </p>
 
 ## 🗂️ **Updated Project Structure**
@@ -25,11 +25,7 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
-├── IMG/
-│   ├── Streamlit/
-│   │   └── streamlit_app.gif
-│   └── gitlab/
-│       └── new_project.png        # NEW: Screenshot of GitLab project creation
+├── img/
 ├── app/
 │   ├── __init__.py
 │   ├── utils.py
