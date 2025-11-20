@@ -1,76 +1,37 @@
-# 🏗️ **Initial Project Setup — LLMOps Music Composer**
+# 🎼 **Utilities Functions for Audio Generator — LLMOps Music Composer**
 
-This branch establishes the foundational structure for the **LLMOps Music Composer** project.
-It introduces the base Python package layout, editable installation setup, environment configuration, and the core scaffolding needed for future branches involving embeddings, melody generation, and LLM-assisted composition workflows.
+This branch adds the first functional component to the project: the audio-generation utilities.
+These functions allow musical note names to be converted into frequencies and then synthesised into WAV audio, forming the foundation for all future music-generation features.
 
-The setup is intentionally lightweight, ready to be expanded cleanly in later stages.
+## 🗂️ **Updated Project Structure**
 
-## 🗂️ **Project Structure**
+Only the **new file** is annotated.
 
 ```text
 LLMOPS-MUSIC-COMPOSER/
-├── .venv/                                # Virtual environment
-├── .env                                  # Environment variables (API keys for future models)
-├── .gitignore                            # Standard ignores: venv, __pycache__, .env, build artefacts
-├── .python-version                       # Python version pin
-├── pyproject.toml                        # Project metadata and dependency configuration
-├── README.md                             # Root documentation
-├── requirements.txt                      # Python dependencies (exported)
-├── setup.py                              # Editable install configuration
+├── .venv/
+├── .env
+├── .gitignore
+├── .python-version
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── setup.py
+├── llmops_music_composer.egg-info/
 │
-├── llmops_music_composer.egg-info/       # Auto-generated metadata from editable install
-│
-└── app/                                  # Core application package
-    └── __init__.py                       # Marks app as a package
+└── app/
+    ├── __init__.py
+    └── utils.py        # NEW: Utility functions for note→frequency and WAV synthesis
 ```
 
-> 💡 The `.env` file will eventually hold keys for Groq, HuggingFace, or audio-generation APIs — and must never be committed.
+## 🎧 **What This Branch Introduces**
 
-## ⚙️ **What Was Done in This Branch**
+### 🎵 Note-to-Frequency Conversion
 
-### 1. **Base project layout created**
+Uses `music21` to transform readable note labels (e.g., "C4", "A#3") into accurate pitch frequencies in Hz.
 
-* Added `app/` with an `__init__.py` so the package imports cleanly.
-* Ensured the folder structure is ready for future modules (LLM logic, composition engine, embeddings, etc.).
+### 🔊 WAV Synthesis from Frequencies
 
-### 2. **Environment + dependency setup**
+Uses a sine-wave synthesiser to generate short audio clips from those frequencies, returned as raw WAV bytes suitable for saving, streaming, or embedding in an API/UI.
 
-* Created `.venv/` for isolated development.
-* Added `.python-version` for consistency across environments.
-* Added `requirements.txt` and `pyproject.toml` for dependency + metadata management.
-
-### 3. **Editable install configured**
-
-* `setup.py` enables:
-
-```bash
-uv pip install --editable .
-```
-
-which makes imports like:
-
-```python
-from app import some_module
-```
-
-work instantly during development.
-
-### 4. **Project prepared for next branches**
-
-This minimal structure is ready for:
-
-* Audio preprocessing utilities
-* LLM-based music-theory reasoning
-* Embedding models for melody and rhythm retrieval
-* Composition pipelines
-* Future CI/CD, containerisation, and deployment flows
-
-## ✅ **Summary**
-
-This setup branch provides a clean, expandable foundation for the LLMOps Music Composer:
-
-* Lightweight but scalable layout
-* Editable package install ready
-* Environment variable support prepared
-* No unnecessary components introduced yet
-* Perfect for layering LLM, audio, and composition modules in the next branches
+These utilities form the first core building block of the LLMOps Music Composer and will support higher-level composition logic in later branches.
