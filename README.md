@@ -20,7 +20,11 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
+<<<<<<< README.md
 ├── IMG/                         # Contains GCP setup screenshots (networking, etc.)
+=======
+├── img/
+>>>>>>> README.md
 ├── app/
 │   ├── __init__.py
 │   ├── utils.py
@@ -63,6 +67,7 @@ These APIs allow Kubernetes clusters, container storage, compute resources, and 
 <p align="center">
   <img src="img/gcp_setup/networking.png" alt="GKE Networking Setup" width="100%">
 </p>
+
 
 ### **2. Create an Artifact Registry Repository**
 
