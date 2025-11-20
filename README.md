@@ -1,17 +1,16 @@
-# 🎼 **Streamlit Application Development — LLMOps Music Composer**
+# 🚀 **Docker & Kubernetes Deployment — LLMOps Music Composer**
 
-This branch introduces the first **interactive user interface** for the LLMOps Music Composer.
-It adds the `application.py` Streamlit app, allowing users to describe the music they want, choose a style, and generate playable AI-composed audio directly from the browser.
+This branch introduces the full **containerisation and orchestration layer** for the LLMOps Music Composer.
+It adds two production-ready components to the project:
 
-The UI integrates melodic, harmonic, rhythmic, and stylistic LLM reasoning with on-the-fly audio synthesis, forming the project’s first complete end-to-end experience.
+* A **Dockerfile** for building and packaging the Streamlit app into a lightweight Python 3.12 container
+* A **kubernetes-deployment.yaml** manifest defining both the Deployment and the LoadBalancer Service for running the app inside a Kubernetes environment (e.g., GKE Autopilot)
 
-<p align="center">
-  <img src="IMG/Streamlit/streamlit_app.gif" alt="AI Music Composer Demo" width="100%">
-</p>
+Together, these updates enable the AI Music Composer to be built, shipped, and deployed consistently in any cloud environment.
 
 ## 🗂️ **Updated Project Structure**
 
-Only the **new file** is annotated.
+Only the **new files** are annotated.
 
 ```text
 LLMOPS-MUSIC-COMPOSER/
@@ -27,44 +26,51 @@ LLMOPS-MUSIC-COMPOSER/
 ├── IMG/
 │   └── Streamlit/
 │       └── streamlit_app.gif
-└── app/
-    ├── __init__.py
-    ├── utils.py
-    ├── main.py
-application.py         # NEW: Streamlit interface for LLM-powered AI music generation
+├── app/
+│   ├── __init__.py
+│   ├── utils.py
+│   └── main.py
+├── application.py
+├── Dockerfile                     # NEW: Container build for the Streamlit app
+└── kubernetes-deployment.yaml     # NEW: Deployment + Service for Kubernetes (GKE-ready)
 ```
 
-## 🎧 **What This Branch Introduces**
+## 🛳️ **What This Branch Introduces**
 
-### 🎛️ Interactive Web Application
+### 🐳 **Docker Containerisation**
 
-A fully functional Streamlit UI that enables users to:
+The included `Dockerfile` provides:
 
-* Describe the type of music they want
-* Select a musical style (Happy, Sad, Jazz, Romantic, Extreme)
-* Generate a complete musical structure: melody, harmony, rhythm, and styled adaptation
-* Listen to the composed audio immediately
+* A Python 3.12-slim base image (lightweight and efficient)
+* Editable installation via `-e .`
+* Environment-safe import paths (`PYTHONPATH=.`)
+* Exposure of port **8501** for Streamlit
+* A production-grade CMD to launch the Streamlit server in headless mode:
 
-### 🎵 Melody, Harmony, and Rhythm Integration
+  * `--server.address=0.0.0.0`
+  * `--server.port=8501`
 
-The app connects to the `MusicLLM` class to produce:
+This container is ready for local runs, CI/CD builds, and cloud deployment.
 
-* Note sequences
-* Chord progressions
-* Rhythm durations
-* Styled composition summaries
+### ☸️ **Kubernetes Deployment (GKE Compatible)**
 
-### 🔊 On-The-Fly Audio Synthesis
+The file `kubernetes-deployment.yaml` introduces:
 
-Using the utilities in `app/utils.py`, the app converts the generated notes into frequencies and synthesises a WAV file that plays directly in the browser.
+* A **Deployment** running the Streamlit app as a single Pod
+* A container image pulled from Artifact Registry
+* Automatic injection of the `GROQ_API_KEY` via Kubernetes Secrets
+* Exposure of containerPort **8501**
+* A **LoadBalancer Service** providing external access via port **80**
 
-### 🎨 Improved UX & Layout
+This is a complete, minimal, cloud-ready deployment model.
 
-The interface includes:
+## 🌐 **Why This Branch Matters**
 
-* Sidebar instructions
-* A clear two-column layout for input and style selection
-* Status messages and spinners during composition
-* Expandable composition summaries
+With this branch, the LLMOps Music Composer is no longer just a local tool — it becomes a **deployable service**:
 
-This branch marks the first point where the project becomes **fully interactive**, giving users a real musical output from natural-language intent.
+* It can run locally in Docker
+* It can be deployed to Kubernetes clusters
+* It can scale later to more replicas
+* It integrates seamlessly into CI/CD workflows (Jenkins, CircleCI, ArgoCD, etc.)
+
+This establishes the operational backbone of the project, enabling reliable and reproducible deployments across environments.
