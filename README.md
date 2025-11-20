@@ -18,7 +18,6 @@ LLMOPS-MUSIC-COMPOSER/
 ├── requirements.txt
 ├── setup.py
 ├── llmops_music_composer.egg-info/
-│
 └── app/
     ├── __init__.py
     └── utils.py        # NEW: Utility functions for note→frequency and WAV synthesis
