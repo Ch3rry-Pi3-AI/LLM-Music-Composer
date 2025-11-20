@@ -1,7 +1,9 @@
-# 🎼 **Utilities Functions for Audio Generator — LLMOps Music Composer**
+# 🎼 **Music LLM Module — LLMOps Music Composer**
 
-This branch adds the first functional component to the project: the audio-generation utilities.
-These functions allow musical note names to be converted into frequencies and then synthesised into WAV audio, forming the foundation for all future music-generation features.
+This branch introduces the project’s first **LLM-powered musical-generation component**.
+The new module provides melody creation, harmony building, rhythm suggestion, and musical-style adaptation using a Groq-hosted LLaMA model.
+
+This marks the beginning of the intelligent composition pipeline and will serve as the backbone for future melody construction, arrangement logic, and style-based rendering.
 
 ## 🗂️ **Updated Project Structure**
 
@@ -20,17 +22,27 @@ LLMOPS-MUSIC-COMPOSER/
 ├── llmops_music_composer.egg-info/
 └── app/
     ├── __init__.py
-    └── utils.py        # NEW: Utility functions for note→frequency and WAV synthesis
+    ├── utils.py
+    └── main.py        # NEW: LLM-driven melody, harmony, rhythm, and style generation
 ```
 
 ## 🎧 **What This Branch Introduces**
 
-### 🎵 Note-to-Frequency Conversion
+### 🎵 Melody Generation
 
-Uses `music21` to transform readable note labels (e.g., "C4", "A#3") into accurate pitch frequencies in Hz.
+Creates a sequence of musical notes based on natural-language prompts.
 
-### 🔊 WAV Synthesis from Frequencies
+### 🎹 Harmony Generation
 
-Uses a sine-wave synthesiser to generate short audio clips from those frequencies, returned as raw WAV bytes suitable for saving, streaming, or embedding in an API/UI.
+Produces chord progressions aligned with an existing melody.
 
-These utilities form the first core building block of the LLMOps Music Composer and will support higher-level composition logic in later branches.
+### 🥁 Rhythm Generation
+
+Suggests beat durations corresponding to melodic structure.
+
+### 🎨 Style Adaptation
+
+Transforms melody, harmony, and rhythm into a specified musical style
+(e.g., jazz, baroque, lofi, cinematic).
+
+These LLM-powered features form the intelligence layer of the LLMOps Music Composer and will directly support future branches involving arrangement, structure, refinement, and full-piece composition.
